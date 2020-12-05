@@ -33,5 +33,31 @@ public struct Tensor<T> {
     public func raveled() -> Tensor<T> {
         return Tensor(shape: [storage.data.count], elements: storage.data)
     }
+    
+    public func transposed() -> Tensor<T> {
+        let axes: [Int] = (0..<shape.count).reversed()
+        return transposed(axes)
+    }
+    
+    public func transposed(_ axes: [Int]) -> Tensor<T> {
+        
+        precondition(axes.count == shape.count, "Number of `axes` and number of dimensions must correspond.")
+        precondition(Set(axes) == Set(0..<shape.count), "Argument `axes` must contain each axis.")
+        
+        let outShape = axes.map { self.shape[$0] }
+        
+        let outPointer = UnsafeMutablePointer<T>.allocate(capacity: self.storage.data.count)
+        defer { outPointer.deallocate() }
+        
+        let inIndices = calculateIndices(formatIndicesInAxes(shape, []))
+        
+        for i in inIndices {
+            let oIndex = calculateIndex(outShape, axes.map { i[$0] })
+            outPointer.advanced(by: oIndex).pointee = getElement(self, i)
+        }
+        
+        let elements = Array(UnsafeBufferPointer(start: outPointer, count: self.storage.data.count))
+        return Tensor(shape: outShape, elements: elements)
+    }
 }
 
