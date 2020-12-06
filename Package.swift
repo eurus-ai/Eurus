@@ -4,17 +4,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "eurus",
+    name: "Eurus",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "eurus",
-            targets: ["eurus"]),
+            name: "Eurus",
+            targets: ["Eurus"]),
         .library(
-            name: "swiftensor",
-            targets: ["swiftensor"]
+            name: "Swiftensor",
+            targets: ["Swiftensor"]
         ),
-        .executable(name: "examples", targets: ["examples"])
+        .executable(name: "Examples", targets: ["Examples"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -25,26 +25,26 @@ let package = Package(
         // Targets are the example building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "eurus",
-            dependencies: ["swiftensor"],
-            path: "./Sources/eurus"
+            name: "Eurus",
+            dependencies: ["Swiftensor"],
+            path: "./Sources/Eurus"
         ),
         .target(
-            name: "examples",
-            dependencies: ["eurus","swiftensor"],
-            path: "./Sources/examples"
+            name: "Examples",
+            dependencies: ["Eurus","Swiftensor"],
+            path: "./Sources/Examples"
         ),
         .target(
-            name: "swiftensor",
+            name: "Swiftensor",
             dependencies: [],
-            path: "./Sources/swiftensor"
+            path: "./Sources/Swiftensor"
         ),
         .testTarget(
-            name: "eurusTests",
-            dependencies: ["eurus"]),
+            name: "EurusTests",
+            dependencies: ["Eurus"]),
         .testTarget(
-            name: "swiftensorTests",
-            dependencies: ["swiftensor"]),
+            name: "SwiftensorTests",
+            dependencies: ["Swiftensor"]),
         
     ]
 )
