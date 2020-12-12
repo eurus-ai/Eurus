@@ -149,3 +149,26 @@ extension Array {
         return array
     }
 }
+
+func shapeForBroadcast(_ lhs: [Int], _ rhs: [Int]) -> [Int]? {
+    let dim = Swift.max(lhs.count, rhs.count)
+    let pLhs = Array(repeating: 1, count: dim - lhs.count) + lhs
+    let pRhs = Array(repeating: 1, count: dim - rhs.count) + rhs
+    let shape = zip(pLhs, pRhs).map({ (tuple: (pLh: Int, pRh: Int))->Int in
+        var result = 0 // 0 as invalid
+        if tuple.pLh == tuple.pRh {
+            result = tuple.pLh
+        }else if tuple.pLh == 1 && tuple.pRh > tuple.pLh {
+            result = tuple.pRh
+        }else if tuple.pRh == 1 && tuple.pLh > tuple.pRh {
+            result =  tuple.pLh
+        }
+        return result
+    })
+    if shape.contains(0) {
+        return nil
+    }else {
+        return shape
+    }
+    
+}
