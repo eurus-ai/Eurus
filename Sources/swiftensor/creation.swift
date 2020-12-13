@@ -1,3 +1,6 @@
+import SwiftGD
+import Foundation
+
 extension Tensor {
     public static func filled(with value: T, shape: [Int]) -> Tensor<T> {
         let elements = [T](repeating: value, count: shape.reduce(1, *))
@@ -36,3 +39,26 @@ extension Tensor where T: FloatingPoint {
         return Tensor(shape: [count], elements: elements)
     }
 }
+
+extension Tensor  {
+    public static func fromImage(path :String) -> Tensor<Double>? {
+        let location = URL(fileURLWithPath: path)
+        if let image = Image(url: location) {
+            let width = image.size.width
+            let height = image.size.height
+            var tensor = Tensor<Double>.filled(with: 0, shape: [width,height,3])
+            for x in 0 ..< width {
+                for y in 0 ..< height {
+                    let color = image.get(pixel: Point(x: x, y: y))
+                    tensor[x,y,0] = color.redComponent
+                    tensor[x,y,1] = color.greenComponent
+                    tensor[x,y,2] = color.blueComponent
+                }
+            }
+            return tensor
+        } else {
+            return nil
+        }
+    }
+}
+

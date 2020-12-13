@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 @testable import Swiftensor
 
 class TensorCreationTests: XCTestCase {
@@ -54,13 +55,20 @@ class TensorCreationTests: XCTestCase {
                                    accuracy: 1e-10)
     }
     
+    func testImage() {
+        let png = URL(fileURLWithPath: #file.replacingOccurrences(of: "TensorCreationTests.swift", with: "Lenna.png"))
+        let tensor = Tensor<Double>.fromImage(path: png.path)
+        XCTAssertNotNil(tensor)
+    }
+    
     static var allTests: [(String, (TensorCreationTests) -> () throws -> Void)] {
         return [
             ("testZeros", testZeros),
             ("testOnes", testOnes),
             ("testEye", testEye),
             ("testRange", testRange),
-            ("testLinspace", testLinspace)
+            ("testLinspace", testLinspace),
+            ("testImage", testImage)
         ]
     }
 }
