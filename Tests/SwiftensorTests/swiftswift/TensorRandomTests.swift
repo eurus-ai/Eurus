@@ -5,7 +5,7 @@ class TensorRandomTests: XCTestCase {
     
     func testUniform() {
         let a = Tensor<Double>.uniform(low: -1, high: 1, shape: [100000])
-        for e in a.storage.data {
+        for e in a.data {
             XCTAssert(-1 <= e && e < 1)
         }
     }

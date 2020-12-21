@@ -38,12 +38,12 @@ extension Tensor {
 
 func getElement<T>(_ array: Tensor<T>, _ index: [Int]) -> T {
     let elementIndex = calculateIndex(array.shape, index)
-    return array.storage.data[elementIndex]
+    return array.data[elementIndex]
 }
 
 func setElement<T>(_ array: inout Tensor<T>, _ index: [Int], newValue: T) {
     let elementIndex = calculateIndex(array.shape, index)
-    array.storage.data[elementIndex] = newValue
+    array.data[elementIndex] = newValue
 }
 
 func getSubarray<T>(_ array: Tensor<T>, _ indices: [[Int]?]) -> Tensor<T> {
@@ -63,6 +63,6 @@ func setSubarray<T>(_ array: inout Tensor<T>, _ indices: [[Int]?], _ newValue: T
     precondition(shape == newValue.shape, "Arguments are incompatible.")
     
     for (i, index) in calculateIndices(indices).enumerated() {
-        setElement(&array, index, newValue: newValue.storage.data[i])
+        setElement(&array, index, newValue: newValue.data[i])
     }
 }

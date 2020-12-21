@@ -45,7 +45,8 @@ let package = Package(
             dependencies: ["Eurus"]),
         .testTarget(
             name: "SwiftensorTests",
-            dependencies: ["Swiftensor"]),
+            dependencies: ["Swiftensor"],
+            resources: [.copy("SwiftSwift/Lenna.png")]),
         
     ]
 )

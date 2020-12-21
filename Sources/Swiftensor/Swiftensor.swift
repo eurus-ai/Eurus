@@ -9,12 +9,21 @@ public struct Tensor<T> {
         }
     }
     
-    public internal(set) var storage: ArrayStorage<T>
+    public var data: [T] {
+        get {
+            return _storage.data
+        }
+        set(newData) {
+            _storage.data = newData
+        }
+    }
+    
+    private var _storage: ArrayStorage<T>
     
     public init(shape: [Int], elements: [T]) {
         precondition(shape.reduce(1, *) == elements.count, "Shape and elements are not compatible.")
         self._shape = shape
-        self.storage = ArrayStorage<T>(data: elements)
+        self._storage = ArrayStorage<T>(data: elements)
     }
     
     public func reshaped(_ newShape: [Int]) -> Tensor<T> {
@@ -24,14 +33,14 @@ public struct Tensor<T> {
         var newShape = newShape
         if let autoIndex = newShape.firstIndex(of: -1) {
             let prod = -newShape.reduce(1, *)
-            newShape[autoIndex] = storage.data.count / prod
+            newShape[autoIndex] = data.count / prod
         }
         
-        return Tensor(shape: newShape, elements: self.storage.data)
+        return Tensor(shape: newShape, elements: self._storage.data)
     }
     
     public func raveled() -> Tensor<T> {
-        return Tensor(shape: [storage.data.count], elements: storage.data)
+        return Tensor(shape: [data.count], elements: _storage.data)
     }
     
     public func transposed() -> Tensor<T> {
@@ -46,7 +55,7 @@ public struct Tensor<T> {
         
         let outShape = axes.map { self.shape[$0] }
         
-        let outPointer = UnsafeMutablePointer<T>.allocate(capacity: self.storage.data.count)
+        let outPointer = UnsafeMutablePointer<T>.allocate(capacity: self.data.count)
         defer { outPointer.deallocate() }
         
         let inIndices = calculateIndices(formatIndicesInAxes(shape, []))
@@ -56,7 +65,7 @@ public struct Tensor<T> {
             outPointer.advanced(by: oIndex).pointee = getElement(self, i)
         }
         
-        let elements = Array(UnsafeBufferPointer(start: outPointer, count: self.storage.data.count))
+        let elements = Array(UnsafeBufferPointer(start: outPointer, count: self.data.count))
         return Tensor(shape: outShape, elements: elements)
     }
 }

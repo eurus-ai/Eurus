@@ -38,7 +38,7 @@ func _concatenate<T>(_ arrays: [Tensor<T>], along axis: Int) -> Tensor<T> {
     let shapeBeforeConcatAxis = [Int](arrays.first!.shape.prefix(upTo: axis))
     let shapeAfterConcatAxis = [Int](arrays.first!.shape.dropFirst(axis+1))
     
-    let totalCount = arrays.map { $0.storage.data.count }.reduce(0, +)
+    let totalCount = arrays.map { $0.data.count }.reduce(0, +)
     let concatAxisSize = arrays.map { $0.shape[axis] }.reduce(0, +)
     
     let out = UnsafeMutablePointer<T>.allocate(capacity: totalCount)
@@ -51,7 +51,7 @@ func _concatenate<T>(_ arrays: [Tensor<T>], along axis: Int) -> Tensor<T> {
     
     for i in 0..<reshapedArrays.first!.shape[0] {
         for (count, array) in zip(copyCounts, reshapedArrays) {
-            let p = UnsafePointer(array.storage.data).advanced(by: i*count)
+            let p = UnsafePointer(array.data).advanced(by: i*count)
             memcpy(pointer, p, MemoryLayout<T>.size * count)
             pointer += count
         }

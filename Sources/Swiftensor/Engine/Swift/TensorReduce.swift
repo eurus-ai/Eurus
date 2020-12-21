@@ -46,20 +46,20 @@ extension Tensor where T: Arithmetic & FloatingPoint {
 // MARK: Whole elements
 
 func _min<T: Comparable>(_ arg: Tensor<T>) -> T {
-    return arg.storage.data.min()!
+    return arg.data.min()!
 }
 
 func _max<T: Comparable>(_ arg: Tensor<T>) -> T {
-    return arg.storage.data.max()!
+    return arg.data.max()!
 }
 
 func _sum<T: Arithmetic>(_ arg: Tensor<T>) -> T {
-    let initial = arg.storage.data.first!
-    return arg.storage.data.dropFirst().reduce(initial, +)
+    let initial = arg.data.first!
+    return arg.data.dropFirst().reduce(initial, +)
 }
 
 func _mean<T: Arithmetic & FloatingPoint>(_ arg: Tensor<T>) -> T {
-    return _sum(arg) / T(arg.storage.data.count)
+    return _sum(arg) / T(arg.data.count)
 }
 
 // MARK: Along axis
@@ -73,7 +73,7 @@ private func reduce<T>(_ arg: Tensor<T>, along axis: Int, handler: (T, T) -> T) 
     precondition(0 <= axis && axis < arg.shape.count, "Invalid axis.")
     
     let outShape = arg.shape.removed(at: axis)
-    let count = arg.storage.data.count / arg.shape[axis]
+    let count = arg.data.count / arg.shape[axis]
     
     let outPointer = UnsafeMutablePointer<T>.allocate(capacity: count)
     defer { outPointer.deallocate() }
@@ -84,7 +84,7 @@ private func reduce<T>(_ arg: Tensor<T>, along axis: Int, handler: (T, T) -> T) 
     var op = outPointer
     for major in 0..<majorSize {
         for minor in 0..<minorSize {
-            var ip = UnsafePointer(arg.storage.data)
+            var ip = UnsafePointer(arg.data)
             // init
             ip += major*minorSize*arg.shape[axis] + minor
             op.pointee = ip.pointee

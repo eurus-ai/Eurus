@@ -52,12 +52,12 @@ func combine<T, U, R>(_ lhs: [T], _ rhs: [U], _ handler: (T, U) -> R) -> [R] {
 }
 
 func apply<T, R>(_ arg: Tensor<T>, _ handler: (T) -> R) -> Tensor<R> {
-    return Tensor(shape: arg.shape, elements: apply(arg.storage.data, handler))
+    return Tensor(shape: arg.shape, elements: apply(arg.data, handler))
 }
 
 func combine<T, U, R>(_ lhs: Tensor<T>, _ rhs: Tensor<U>, _ handler: (T, U) -> R) -> Tensor<R> {
     precondition(lhs.shape==rhs.shape, "Two Tensors have incompatible shape.")
-    return Tensor(shape: lhs.shape, elements: combine(lhs.storage.data, rhs.storage.data, handler))
+    return Tensor(shape: lhs.shape, elements: combine(lhs.data, rhs.data, handler))
 }
 
 // index calculation
