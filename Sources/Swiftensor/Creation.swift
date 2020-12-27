@@ -1,4 +1,4 @@
-import SwiftGD
+import SwiftCV
 import Foundation
 
 extension Tensor {
@@ -41,24 +41,20 @@ extension Tensor where T: FloatingPoint {
 }
 
 extension Tensor  {
-    public static func fromImage(path :String) -> Tensor<Double>? {
-        let location = URL(fileURLWithPath: path)
-        if let image = Image(url: location) {
-            let width = image.size.width
-            let height = image.size.height
-            var tensor = Tensor<Double>.filled(with: 0, shape: [width,height,3])
-            for x in 0 ..< width {
-                for y in 0 ..< height {
-                    let color = image.get(pixel: Point(x: x, y: y))
-                    tensor[x,y,0] = color.redComponent
-                    tensor[x,y,1] = color.greenComponent
-                    tensor[x,y,2] = color.blueComponent
-                }
-            }
-            return tensor
-        } else {
-            return nil
-        }
+
+    
+    public static func fromImage(path :String) -> Tensor<UInt8>? {
+        var cvImg = imread(path)
+        cvImg = cvtColor(cvImg, nil, ColorConversionCode.COLOR_BGR2RGB)
+        let ptr = cvImg.dataPtr
+        let matShape: [Int] = [cvImg.rows, cvImg.cols, cvImg.channels]
+        let length = cvImg.rows*cvImg.cols*cvImg.channels
+        let uint8Ptr = ptr.bindMemory(to: UInt8.self, capacity: length)
+        let uint8Buffer = UnsafeBufferPointer(start: uint8Ptr, count: length)
+        let output = Array(uint8Buffer)
+        let tensor = Tensor<UInt8>(shape: matShape, elements: output)
+        return tensor
+        
     }
 }
 
