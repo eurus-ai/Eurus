@@ -36,11 +36,11 @@ public struct Tensor<T> {
             newShape[autoIndex] = data.count / prod
         }
         
-        return Tensor(shape: newShape, elements: self._storage.data)
+        return Tensor(shape: newShape, elements: self.data)
     }
     
     public func raveled() -> Tensor<T> {
-        return Tensor(shape: [data.count], elements: _storage.data)
+        return Tensor(shape: [data.count], elements: data)
     }
     
     public func transposed() -> Tensor<T> {

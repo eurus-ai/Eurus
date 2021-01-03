@@ -52,7 +52,7 @@ extension Tensor  {
         let uint8Ptr = ptr.bindMemory(to: UInt8.self, capacity: length)
         let uint8Buffer = UnsafeBufferPointer(start: uint8Ptr, count: length)
         let output = Array(uint8Buffer)
-        let tensor = Tensor<UInt8>(shape: matShape, elements: output)
+        let tensor = Tensor<UInt8>(shape: matShape, elements: output).transposed([2,0,1])
         return tensor
         
     }

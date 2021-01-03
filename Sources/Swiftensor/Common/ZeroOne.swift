@@ -21,6 +21,15 @@ extension UInt: ZeroOne {
     }
 }
 
+extension UInt8: ZeroOne {
+    public static var zero: UInt8 {
+        return 0
+    }
+    public static var one: UInt8 {
+        return 1
+    }
+}
+
 extension Float: ZeroOne {
     public static var zero: Float {
         return 0

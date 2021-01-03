@@ -57,7 +57,7 @@ class TensorCreationTests: XCTestCase {
     
     func testImage() {
         let png = URL(fileURLWithPath: #file.replacingOccurrences(of: "TensorCreationTests.swift", with: "Lenna.png"))
-        let tensor = Tensor<Double>.fromImage(path: png.path)
+        let tensor = Tensor<UInt8>.fromImage(path: png.path)
         XCTAssertNotNil(tensor)
     }
     
