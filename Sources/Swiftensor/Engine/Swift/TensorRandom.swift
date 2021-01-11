@@ -2,7 +2,8 @@ extension Tensor where T: FloatingPointFunctions & FloatingPoint {
     
     public static func uniform(low: T = 0, high: T = 1, shape: [Int]) -> Tensor<T> {
         let count = shape.reduce(1, *)
-        let elements = (0..<count).map { _ in _uniform(low: low, high: high) }
+
+        let elements = (0..<count).map { _ in Double.random(in: (low as! Double) ... (high as! Double)) as! T }
         
         return Tensor<T>(shape: shape, elements: elements)
     }

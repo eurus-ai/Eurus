@@ -12,4 +12,9 @@ class TensorConvTests: XCTestCase {
         XCTAssertEqual(result.shape,[27,512*512])
     }
     
+    static var allTests: [(String, (TensorConvTests) -> () throws -> Void)] {
+        return [
+            ("testImg2Col", testImg2Col)
+        ]
+    }
 }
