@@ -63,3 +63,50 @@ public func img2col<T:ZeroOne>(value: Tensor<T>, batchSize: Int, channels: Int, 
     return Tensor(shape: resultShape,
                    elements: Array(UnsafeBufferPointer(start: outPointer, count: count)))
 }
+
+public func col2img<T:ZeroOne>(value: Tensor<T>, resultShape:[Int], batchSize: Int, channels: Int, height: Int, width: Int, kernelHeight: Int, kernelWidth: Int, padding: Int, stride: Int) -> Tensor<T> where T:Arithmetic {
+    let src = UnsafePointer(value.data)
+    let count = resultShape[0]*resultShape[1]*resultShape[2]*resultShape[3]
+    let outPointer = UnsafeMutablePointer<T>.allocate(capacity: count)
+    defer { outPointer.deallocate() }
+    let dst = outPointer
+    
+    let depth_stride = width * height
+    let featuremap_stride = depth_stride * channels
+    
+    let input_height = (height + 2 * padding - kernelHeight) / stride + 1
+    let input_width = (width + 2 * padding - kernelWidth) / stride + 1
+    let src_batch_stride = input_width * input_height
+    let src_full_stride = src_batch_stride * batchSize
+    
+    
+    for i in 0 ..< width * height * channels * batchSize {
+        dst[i] = 0 as! T;
+    }
+    
+    
+    for k in 0 ..< kernelWidth * kernelHeight * channels {
+        let kx = k % kernelWidth;
+        let kyz = k / kernelWidth;
+        let ky = kyz % kernelHeight;
+        let kz = kyz / kernelHeight;
+        
+        for b in 0 ..< batchSize {
+            
+            for y in 0 ..< input_height {
+                let in_y = y &* stride &- padding &+ ky;
+                
+                for x in 0 ..< input_width {
+                    let in_x = x &* stride &- padding &+ kx;
+                    
+                    if (in_x >= 0 && in_x < width && in_y >= 0 && in_y < height) {
+                        let input = src[src_full_stride &* k &+ b &* src_batch_stride &+ y &* input_width &+ x];
+                        dst[in_x &+ in_y &* width &+ kz &* depth_stride &+ b &* featuremap_stride] += input;
+                    }
+                }
+            }
+        }
+    }
+    return Tensor(shape: resultShape,
+                  elements: Array(UnsafeBufferPointer(start: outPointer, count: count)))
+}
