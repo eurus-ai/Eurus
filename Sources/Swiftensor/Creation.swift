@@ -58,3 +58,56 @@ extension Tensor  {
     }
 }
 
+
+//MARK: Tensor - array conversion
+public extension Tensor {
+    
+    /// Creates a tensor value holding the provided scalar. The tensor will have an empty shape.
+    /// - Parameters:
+    ///   - e: Element
+    init(_ e: T) {
+        self.init(shape: [],elements:[e])
+    }
+    
+    init(_ v: [T]) {
+        self.init(shape: [v.count],elements: v)
+    }
+    
+    init(_ v: [[T]]) {
+        self.init(shape: [v.count, v.first?.count ?? 0],elements: Array(v.joined()))
+    }
+    
+
+    init(_ v: [[[T]]]) {
+        self.init(
+            shape: [v.count, v.first?.count ?? 0, v.first?.first?.count ?? 0],
+            elements: Array(v.joined().joined())
+        )
+    }
+    
+    init(_ v: [[[[T]]]]) {
+        self.init(
+            shape: [
+                v.count,
+                v.first?.count ?? 0,
+                v.first?.first?.count ?? 0,
+                v.first?.first?.first?.count ?? 0
+            ],
+            elements: Array(v.joined().joined().joined())
+        )
+    }
+    
+    init(_ v: [[[[[T]]]]]) {
+        self.init(
+            shape: [
+                v.count,
+                v.first?.count ?? 0,
+                v.first?.first?.count ?? 0,
+                v.first?.first?.first?.count ?? 0,
+                v.first?.first?.first?.first?.count ?? 0
+            ],
+            elements: Array(v.joined().joined().joined().joined())
+        )
+    }
+}
+

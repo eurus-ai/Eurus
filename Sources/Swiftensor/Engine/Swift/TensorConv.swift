@@ -21,13 +21,13 @@ public func img2col<T:ZeroOne>(value: Tensor<T>, batchSize: Int, channels: Int, 
     let src = UnsafePointer(value.data)
     let dst = outPointer
     
-    let depth_stride = width * height;
-    let featuremap_stride = depth_stride * channels;
+    let depth_stride = width * height
+    let featuremap_stride = depth_stride * channels
     
-    let output_height = (height + 2 * padding - kernelHeight) / stride + 1;
-    let output_width = (width + 2 * padding - kernelWidth) / stride + 1;
-    let dst_batch_stride = output_width * output_height;
-    let dst_full_stride = dst_batch_stride * batchSize;
+    let output_height = (height + 2 * padding - kernelHeight) / stride + 1
+    let output_width = (width + 2 * padding - kernelWidth) / stride + 1
+    let dst_batch_stride = output_width * output_height
+    let dst_full_stride = dst_batch_stride * batchSize
     
     for k in 0 ..< kernelWidth &* kernelHeight &* channels {
         let kx = k % kernelWidth
@@ -54,7 +54,7 @@ public func img2col<T:ZeroOne>(value: Tensor<T>, batchSize: Int, channels: Int, 
                     let dst_float = (dst as! UnsafeMutablePointer<T>)
                     let dst_offset = dst_float.advanced(by: dst_full_stride &* k &+ b &* dst_batch_stride &+ y &* output_width)
                     for i in 0 ..< output_width {
-                        dst_offset[i] = T.zero;
+                        dst_offset[i] = T.zero
                     }
                 }
             }
@@ -81,27 +81,27 @@ public func col2img<T:ZeroOne>(value: Tensor<T>, resultShape:[Int], batchSize: I
     
     
     for i in 0 ..< width * height * channels * batchSize {
-        dst[i] = 0 as! T;
+        dst[i] = T.zero
     }
     
     
     for k in 0 ..< kernelWidth * kernelHeight * channels {
-        let kx = k % kernelWidth;
-        let kyz = k / kernelWidth;
-        let ky = kyz % kernelHeight;
-        let kz = kyz / kernelHeight;
+        let kx = k % kernelWidth
+        let kyz = k / kernelWidth
+        let ky = kyz % kernelHeight
+        let kz = kyz / kernelHeight
         
         for b in 0 ..< batchSize {
             
             for y in 0 ..< input_height {
-                let in_y = y &* stride &- padding &+ ky;
+                let in_y = y &* stride &- padding &+ ky
                 
                 for x in 0 ..< input_width {
-                    let in_x = x &* stride &- padding &+ kx;
+                    let in_x = x &* stride &- padding &+ kx
                     
                     if (in_x >= 0 && in_x < width && in_y >= 0 && in_y < height) {
-                        let input = src[src_full_stride &* k &+ b &* src_batch_stride &+ y &* input_width &+ x];
-                        dst[in_x &+ in_y &* width &+ kz &* depth_stride &+ b &* featuremap_stride] += input;
+                        let input = src[src_full_stride &* k &+ b &* src_batch_stride &+ y &* input_width &+ x]
+                        dst[in_x &+ in_y &* width &+ kz &* depth_stride &+ b &* featuremap_stride] = input
                     }
                 }
             }

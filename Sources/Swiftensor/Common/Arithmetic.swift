@@ -17,5 +17,6 @@ public protocol Moduloable {
 
 extension Int: Arithmetic, Moduloable {}
 extension UInt: Arithmetic, Moduloable {}
+extension UInt8: Arithmetic, Moduloable {}
 extension Float: Arithmetic {}
 extension Double: Arithmetic {}

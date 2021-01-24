@@ -61,6 +61,15 @@ class TensorCreationTests: XCTestCase {
         XCTAssertNotNil(tensor)
     }
     
+    func testFromArray() {
+        XCTAssertEqual(Tensor<Int>(1),Tensor(shape: [], elements: [1]))
+        XCTAssertEqual(Tensor<Int>([1,2]),Tensor(shape: [2], elements: [1,2]))
+        XCTAssertEqual(Tensor<Int>([[1,2],[3,4]]),Tensor(shape: [2,2], elements: [1,2,3,4]))
+        XCTAssertEqual(Tensor<Int>([[[1,2],[3,4]]]),Tensor(shape: [1,2,2], elements: [1,2,3,4]))
+        XCTAssertEqual(Tensor<Int>([[[[1,2],[3,4]]]]),Tensor(shape: [1,1,2,2], elements: [1,2,3,4]))
+        XCTAssertEqual(Tensor<Int>([[[[[1,2],[3,4]]]]]),Tensor(shape: [1,1,1,2,2], elements: [1,2,3,4]))
+    }
+    
     static var allTests: [(String, (TensorCreationTests) -> () throws -> Void)] {
         return [
             ("testZeros", testZeros),
@@ -68,7 +77,8 @@ class TensorCreationTests: XCTestCase {
             ("testEye", testEye),
             ("testRange", testRange),
             ("testLinspace", testLinspace),
-            ("testImage", testImage)
+            ("testImage", testImage),
+            ("testFromArray",testFromArray)
         ]
     }
 }
