@@ -27,7 +27,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Eurus",
-            dependencies: ["Swiftensor"],
+            dependencies: ["Swiftensor",.product(name: "Logging", package: "swift-log")],
             path: "./Sources/Eurus"
         ),
         .target(
@@ -42,7 +42,11 @@ let package = Package(
         ),
         .testTarget(
             name: "EurusTests",
-            dependencies: ["Eurus"]),
+            dependencies: ["Eurus"],
+            resources: [.copy("Data/Mnist/t10k-images.idx3-ubyte")
+                        ,.copy("Data/Mnist/t10k-labels.idx1-ubyte")
+                        ,.copy("Data/Mnist/train-images.idx3-ubyte")
+                        ,.copy("Data/Mnist/train-labels.idx1-ubyte")]),
         .testTarget(
             name: "SwiftensorTests",
             dependencies: ["Swiftensor"],

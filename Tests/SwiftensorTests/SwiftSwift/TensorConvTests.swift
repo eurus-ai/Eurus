@@ -69,7 +69,9 @@ class TensorConvTests: XCTestCase {
     static var allTests: [(String, (TensorConvTests) -> () throws -> Void)] {
         return [
             ("testImg2Col", testImg2Col),
-            ("testCol2Img", testCol2Img)
+            ("testCol2Img", testCol2Img),
+            ("testImg2ColInput",testImg2ColInput),
+            ("testCol2ImgInput",testCol2ImgInput)
         ]
     }
 }
